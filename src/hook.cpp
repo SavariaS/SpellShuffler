@@ -108,6 +108,10 @@ void selectRandomSlot()
 		GameDataMan::getInstance().setSelectedSpellIndex(g_selectedIndex);
 		*g_logFile << "[SpellShuffler] New selected spell index: " << g_selectedIndex << std::endl;
 	}
+	else
+	{
+		*g_logFile << "[SpellShuffler] No suitable candidates found, reusing same index: " << currentIndex << std::endl;
+	}
 }
 
 /**
@@ -150,6 +154,10 @@ void selectRandomSpell()
 		                                                : g_selectedIndex;
 		GameDataMan::getInstance().setEquippedSpell(selectedIndex, newSpellId);
 		*g_logFile << "[SpellShuffler] New spell: " << newSpellId << std::endl;
+	}
+	else
+	{
+		*g_logFile << "[SpellShuffler] No suitable candidates found, reusing same spell: " << currentSpellID << std::endl;
 	}
 }
 
