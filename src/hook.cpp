@@ -126,11 +126,14 @@ void selectRandomSpell()
 	int32_t intelligence = GameDataMan::getInstance().getIntelligence();
 	int32_t faith = GameDataMan::getInstance().getFaith();
 	int32_t arcane = GameDataMan::getInstance().getArcane();
+	int32_t selectedIndex = GameDataMan::getInstance().getSelectedSpellIndex();
+	int32_t currentSpellID = GameDataMan::getInstance().getEquippedSpellId(g_selectedIndex);
 	
 	std::vector<const Magic*> availableSpells;
 	for(Magic& spell : g_spells)
 	{
-		if(spell.fp <= fp &&
+		if(spell.id != currentSpellID &&
+		   spell.fp <= fp &&
 		   spell.intelligence <= intelligence &&
 		   spell.faith <= faith &&
 		   spell.arcane <= arcane)
@@ -163,6 +166,12 @@ void spellShufflerMain(void* playerIns)
 	}
 	
 	int32_t animationId = PlayerIns::getInstance().getAnimationId();
+
+	// These animation ID can happen during other animations, filter them out
+	if(animationId == 20000) return;
+	if(animationId == 320090100) return;
+	if(animationId == 352090100) return;
+
 	if(!g_isCasting && isMagicAnimation(animationId))
 	{
 		g_isCasting = true;
