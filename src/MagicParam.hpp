@@ -1,0 +1,80 @@
+/**
+ * @file MagicParam.hpp
+ * 
+ * @brief Singleton for accessing the Magic param table
+ * @details Contains getters for getting all rows or
+ *          only getting 1 row by ID
+ * 
+ * @author SavariaS
+ */
+#ifndef ER_SPELL_SHUFFLER_MAGIC_PARAM_HPP
+#define ER_SPELL_SHUFFLER_MAGIC_PARAM_HPP
+
+#include <vector>
+#include <cstdint>
+#include "TGA/param_containers.h"
+
+/**
+ * @brief POD structure containing the relevant fields of a row
+*/
+struct Magic
+{
+	int32_t id;
+	uint8_t refCategory;
+	bool isIncantation;
+	uint16_t fp;
+	uint8_t intelligence;
+	uint8_t faith;
+	uint8_t arcane;
+};
+
+/**
+ * @brief Singleton for accessing the Magic param table
+ */
+class MagicParam
+{
+public:
+	/**
+	 * @brief Get the singleton instance
+	 * @return The MagicParam singleton
+	 */
+	static MagicParam& getInstance();
+
+	/**
+	 * @brief Set the level 2 pointer used to access the param tables
+	 * @param pointer Level 2 pointer to param tables
+	 */
+	void setPointer(void** pointer);
+	
+	/**
+	 * @brief Get a row by ID
+	 * @param magicId The header ID of the row
+	 * @return The relevant fields packed in a struct
+	 */
+	Magic getMagicById(int32_t magicId);
+
+	/**
+	 * @brief Get every row of the Magic param table
+	 * @return A list of every row
+	 */
+	std::vector<Magic> getAllMagic();
+
+private:
+	/**
+	 * @brief Private ctor for the singleton design pattern
+	 */
+	MagicParam();
+	
+	/**
+	 * @brief Helper function for getting a pointer to the Magic param table
+	 */
+	void getMagicTable();
+	
+	// The RegulationManager pointer is not known when the mod starts loading
+	// A level 2 pointer is used to access it once a save has been loaded
+	void** m_regulationManagerPtr = nullptr;
+	_ParamTable* m_magicTable = nullptr; //< Reference to the Magic table that will be reused
+	static inline MagicParam* singleton = nullptr;
+};
+
+#endif
