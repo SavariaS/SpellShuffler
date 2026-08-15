@@ -141,7 +141,7 @@ void selectRandomSpell()
 	
 	if(availableSpells.size() != 0)
 	{
-		std::uniform_int_distribution<int> distribution(0, availableSpells.size());
+		std::uniform_int_distribution<int> distribution(0, availableSpells.size() - 1);
 		int32_t newSpellId = availableSpells.at(distribution(g_randomGenerator))->id;
 		int32_t selectedIndex = (g_allowSpellSwitching) ? GameDataMan::getInstance().getSelectedSpellIndex()
 		                                                : g_selectedIndex;
