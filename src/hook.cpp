@@ -32,13 +32,15 @@ std::mt19937 g_randomGenerator(g_seed()); //< Random number engine
  * @details The animation ID of each spell starts at 400,045,100 + (spell.refType * 1,000,000)
  *          The maximum refType currently in the game is Renalla's Twin Moons at 161
  *          Therefore, checking refTypes between 0 and 199 seems reasonable
+ *          20000 is a special case for casting when walking
  * 
  * @param animationId The ID of the animation currently playing
  * @return True if the player is in a spell casting animation, False otherwise
  */
 bool isMagicAnimation(int32_t animationId)
 {
-	return 400000000 < animationId && animationId < 600000000;
+	return (400000000 < animationId && animationId < 600000000)
+	       || animationId == 20000;
 }
 
 /**
@@ -183,7 +185,6 @@ void spellShufflerMain(void* playerIns)
 	int32_t animationId = PlayerIns::getInstance().getAnimationId();
 
 	// These animation ID can happen during other animations, filter them out
-	if(animationId == 20000) return;
 	if(animationId == 320090100) return;
 	if(animationId == 352090100) return;
 
