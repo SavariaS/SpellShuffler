@@ -20,12 +20,12 @@
 struct Magic
 {
 	int32_t id;
-	uint8_t refCategory;
-	bool isIncantation;
 	uint16_t fp;
 	uint8_t intelligence;
 	uint8_t faith;
 	uint8_t arcane;
+	bool isOffensiveMagic;
+	bool isIncantation;
 };
 
 /**
@@ -69,6 +69,14 @@ private:
 	 * @brief Helper function for getting a pointer to the Magic param table
 	 */
 	void getMagicTable();
+
+	/**
+	 * @brief Helper function for loading the relevant fields of a row in the Magic struct
+	 * @param row The row to load
+	 * @param id The header ID of the row
+	 * @return A Magic struct populated by the row
+	 */
+	Magic getMagicByRow(uint8_t* row, int32_t id);
 	
 	// The RegulationManager pointer is not known when the mod starts loading
 	// A level 2 pointer is used to access it once a save has been loaded

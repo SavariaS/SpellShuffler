@@ -52,17 +52,24 @@ void generateSpellList()
 	std::vector<Magic> allMagic = MagicParam::getInstance().getAllMagic();
 	for(Magic& magic : allMagic)
 	{
+		// Ignore sorceries when incantsOnly is set and vice-versa
 		if(g_incantsOnly && !magic.isIncantation) continue;
 		if(g_sorceriesOnly && magic.isIncantation) continue;
 		
-		// Exceptions
+		// Ignore NPC spells and support spells
 		if(magic.fp == 0 || magic.fp == 1) continue; // FP cost of 0 or 1 means a NPC spell
-		if(magic.refCategory == 2) continue; // Ignore SpEffects, only keep offensive spells (Bullet or Attack)
+		if(magic.isOffensiveMagic == false) continue;
+
+		// Ignore spells not obtainable in vanilla not covered by the above checks
 		if(magic.id == 4641) continue; // Carian Retaliation (Unused 1)
 		if(magic.id == 4642) continue; // Carian Retaliation (Unused 2)
 		if(magic.id == 8000) continue; // Incantation version of Briars of Sin
 		if(magic.id == 8001) continue; // Incantation version of Briars of Punishment
-		if(magic.id == 999999999) continue; // [NPC: Incantation] Golden Lightning Fortification (NPC spell with real FP cost)
+		if(magic.id == 999999999) continue; // [NPC: Incantation] Golden Lightning Fortification
+
+		// QoL improvement: Ignore offensive spells that are too conditional
+		if(magic.id == 4630) continue; // Thops's barrier
+		if(magic.id == 4640) continue; // Carian retaliation
 		
 		g_spells.push_back(magic);
 	}
