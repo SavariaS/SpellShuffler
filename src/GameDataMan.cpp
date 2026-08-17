@@ -34,7 +34,7 @@ void GameDataMan::setPointer(void** pointer)
 
 int32_t GameDataMan::getIntelligence()
 {
-	void* gameDataMan = *reinterpret_cast<void**>(m_gameDataManPtr);
+	void* gameDataMan = *m_gameDataManPtr;
 	unsigned char* base = dereference_chain(gameDataMan, 0x08);
 	return *reinterpret_cast<int32_t*>(base + 0x50);
 }

@@ -121,6 +121,15 @@ void attachHook(HMODULE hModule)
     //=======================================================================//
     //                            AOB scans                                  //
     //=======================================================================//
+    *g_logFile << "[SpellShuffler] Scanning for WorldChrMan..." << std::endl;
+	void** worldChrManPtr = reinterpret_cast<void**>(resolve_rip_relative_static("48 8B 05 ?? ?? ?? ?? 48 85 C0 74 0F 48 39 88"));
+	PlayerIns::getInstance().setPointer(worldChrManPtr);
+    if (!worldChrManPtr) 
+	{
+        *g_logFile << "[SpellShuffler] WorldChrMan signature scan failed - aborting" << std::endl;
+        abort();
+    }
+
 	*g_logFile << "[SpellShuffler] Scanning for GameDataMan..." << std::endl;
 	void** gameDataManPtr = reinterpret_cast<void**>(resolve_rip_relative_static("48 8B 05 ?? ?? ?? ?? 48 85 C0 74 05 48 8B 40 58 C3 C3"));
 	GameDataMan::getInstance().setPointer(gameDataManPtr);

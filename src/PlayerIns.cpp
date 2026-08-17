@@ -22,19 +22,28 @@ PlayerIns& PlayerIns::getInstance()
 	return *singleton;
 }
 
-void PlayerIns::setPointer(void* pointer)
+void PlayerIns::setPointer(void** pointer)
 {
-	m_playerIns = pointer;
+	m_worldChrManPtr = pointer;
 }
 
-int32_t PlayerIns::getAnimationId()
+void* PlayerIns::getPointer(uint8_t index)
 {
-	unsigned char* base = dereference_chain(m_playerIns, 0x190, 0x18);
+	void* worldChrMan = *m_worldChrManPtr;
+	unsigned char* base = dereference_chain(worldChrMan, 0x10EF8, index * 0x10);
+	return reinterpret_cast<void*>(base);
+}
+
+int32_t PlayerIns::getAnimationId(uint8_t index)
+{
+	void* playerIns = getPointer(index);
+	unsigned char* base = dereference_chain(playerIns, 0x190, 0x18);
 	return *reinterpret_cast<int32_t*>(base + 0x20);
 }
 
-uint32_t PlayerIns::getFP()
+uint32_t PlayerIns::getFP(uint8_t index)
 {
-	unsigned char* base = dereference_chain(m_playerIns, 0x190, 0x00); 
+	void* playerIns = getPointer(index);
+	unsigned char* base = dereference_chain(playerIns, 0x190, 0x00); 
 	return *reinterpret_cast<uint32_t*>(base + 0x148);
 }

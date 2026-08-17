@@ -14,6 +14,8 @@
 #include <iostream>
 #include <random>
 
+#define PLAYER_ID 0
+
 bool g_allowSpellSwitching = false; //< Is changing the selected spell index allowed?
 bool g_equippedSpellsOnly = false; //< If true, randomizes to a random equipped spell. If false, randomizes to any spell
 bool g_sorceriesOnly = false; //< Only select sorceries
@@ -84,7 +86,7 @@ void generateSpellList()
  */
 void selectRandomSlot()
 {
-	uint32_t fp = PlayerIns::getInstance().getFP();
+	uint32_t fp = PlayerIns::getInstance().getFP(PLAYER_ID);
 	int32_t intelligence = GameDataMan::getInstance().getIntelligence();
 	int32_t faith = GameDataMan::getInstance().getFaith();
 	int32_t arcane = GameDataMan::getInstance().getArcane();
@@ -135,7 +137,7 @@ void selectRandomSpell()
 		generateSpellList();
 	}
 	
-	uint32_t fp = PlayerIns::getInstance().getFP();
+	uint32_t fp = PlayerIns::getInstance().getFP(PLAYER_ID);
 	int32_t intelligence = GameDataMan::getInstance().getIntelligence();
 	int32_t faith = GameDataMan::getInstance().getFaith();
 	int32_t arcane = GameDataMan::getInstance().getArcane();
@@ -175,19 +177,15 @@ void selectRandomSpell()
  */
 void spellShufflerMain(void* playerIns)
 {
-	PlayerIns::getInstance().setPointer(playerIns);
+	// We only care about the player. Ignore every other PlayerIns instance
+	if(playerIns != PlayerIns::getInstance().getPointer(PLAYER_ID)) return;
 	
 	if(!g_allowSpellSwitching)
 	{
 		GameDataMan::getInstance().setSelectedSpellIndex(g_selectedIndex);
 	}
 	
-	int32_t animationId = PlayerIns::getInstance().getAnimationId();
-
-	// These animation ID can happen during other animations, filter them out
-	if(animationId == 320090100) return;
-	if(animationId == 352090100) return;
-
+	int32_t animationId = PlayerIns::getInstance().getAnimationId(0);
 	if(!g_isCasting && isMagicAnimation(animationId))
 	{
 		g_isCasting = true;

@@ -3,7 +3,7 @@
  * 
  * @brief Singleton for accessing attributes of the PlayerIns structure
  * @details Contains getter function for the animation ID currently playing
- *          and the PC's remaining FP
+ *          and the character's remaining FP
  * 
  * @author SavariaS
  */
@@ -25,22 +25,31 @@ public:
 	static PlayerIns& getInstance();
 
 	/**
-	 * @brief Set the pointer used to access PlayerIns
-	 * @param pointer The pointer to PlayerIns
+	 * @brief Set the level 2 pointer used to access WorldChrMan
+	 * @param pointer The level 2 pointer to WorldChrMan
 	 */
-	void setPointer(void* pointer);
-	
-	/**
-	 * @brief Get the ID of the current animation
-	 * @return The animation ID
-	 */
-	int32_t getAnimationId();
+	void setPointer(void** pointer);
 
 	/**
-	 * @brief Get the PC's remaining FP
+	 * @brief Get the PlayerIns pointer of a character
+	 * @param index Index of the character
+	 * @return The pointer to the PlayerIns object of that character
+	 */
+	void* getPointer(uint8_t index);
+	
+	/**
+	 * @brief Get the ID of the character's current animation
+	 * @param index Index of the character
+	 * @return The animation ID
+	 */
+	int32_t getAnimationId(uint8_t index);
+
+	/**
+	 * @brief Get the character's remaining FP
+	 * @param index Index of the character
 	 * @return Remaining FP
 	 */
-	uint32_t getFP();
+	uint32_t getFP(uint8_t index);
 	
 private:
 	/**
@@ -48,9 +57,9 @@ private:
 	 */
 	PlayerIns();
 	
-	// The PlayerIns pointer comes from the hook so it is always valid
-	// No need for level 2 pointer in this case
-	void* m_playerIns = nullptr;
+	// PlayerIns may change location so a level 2 pointer is used every access
+	// to get a valid pointer
+	void** m_worldChrManPtr = nullptr;
 	static inline PlayerIns* singleton = nullptr;
 };
 
