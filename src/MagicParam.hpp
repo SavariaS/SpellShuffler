@@ -24,6 +24,7 @@ struct Magic
 	uint8_t intelligence;
 	uint8_t faith;
 	uint8_t arcane;
+	uint8_t refCategory;
 	bool isOffensiveMagic;
 	bool isIncantation;
 };

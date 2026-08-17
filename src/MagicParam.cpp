@@ -44,6 +44,7 @@ Magic MagicParam::getMagicByRow(uint8_t* row, int32_t id)
 	magic.id = id;
 	magic.isOffensiveMagic = !(*reinterpret_cast<uint8_t*>(row + 0x32) & (1<<6)); // Flag for if the spell can be used when attacking is disabled
 	magic.isIncantation = *reinterpret_cast<uint8_t*>(row + 0x26);
+	magic.refCategory = *reinterpret_cast<uint8_t*>(row + 0x1e);
 	magic.fp = *reinterpret_cast<uint16_t*>(row + 0x10);
 	magic.intelligence = *reinterpret_cast<uint8_t*>(row + 0x22);
 	magic.faith = *reinterpret_cast<uint8_t*>(row + 0x23);
