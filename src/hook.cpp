@@ -68,6 +68,7 @@ void generateSpellList()
 		// Ignore support spells not caught by the above checks
 		if(magic.id == 4630) continue; // Thops's barrier
 		if(magic.id == 4640) continue; // Carian retaliation
+		if(magic.id == 4650) continue; // Eternal darkness
 
 		// Ignore spells not obtainable in vanilla not caught by the above checks
 		if(magic.id == 4641) continue; // Carian Retaliation (Unused 1)
