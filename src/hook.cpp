@@ -30,19 +30,26 @@ std::random_device g_seed; //< Random device for seeding the random number engin
 std::mt19937 g_randomGenerator(g_seed()); //< Random number engine
 
 /**
- * @brief Checks if an animation is a spell casting animation
+ * @brief Checks if a spell casting animation is in the animation buffer
  * @details The animation ID of each spell starts at 400,045,100 + (spell.refType * 1,000,000)
  *          The maximum refType currently in the game is Renalla's Twin Moons at 161
  *          Therefore, checking refTypes between 0 and 199 seems reasonable
- *          20000 is a special case for casting when walking
  * 
- * @param animationId The ID of the animation currently playing
+ * @param animationId The animations buffer
  * @return True if the player is in a spell casting animation, False otherwise
  */
-bool isMagicAnimation(int32_t animationId)
+bool isMagicAnimation(std::array<int32_t, 10> animationsId)
 {
-	return (400000000 < animationId && animationId < 600000000)
-	       || animationId == 20000;
+	for(int32_t animationId : animationsId)
+	{
+		if(400000000 < animationId && animationId < 600000000)
+		{
+			return true;
+		}
+	}
+
+	// If no magic animation were found in the buffer, return False
+	return false;
 }
 
 /**
@@ -187,12 +194,12 @@ void spellShufflerMain(void* playerIns)
 		GameDataMan::getInstance().setSelectedSpellIndex(g_selectedIndex);
 	}
 	
-	int32_t animationId = PlayerIns::getInstance().getAnimationId(0);
-	if(!g_isCasting && isMagicAnimation(animationId))
+	std::array<int32_t, 10> animationsId = PlayerIns::getInstance().getAnimationsId(0);
+	if(!g_isCasting && isMagicAnimation(animationsId))
 	{
 		g_isCasting = true;
 	}
-	else if(g_isCasting && !isMagicAnimation(animationId))
+	else if(g_isCasting && !isMagicAnimation(animationsId))
 	{
 		g_isCasting = false;
 		

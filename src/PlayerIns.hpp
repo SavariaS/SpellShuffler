@@ -11,6 +11,7 @@
 #define ER_SPELL_SHUFFLER_PLAYERINS_HPP
 
 #include <cstdint>
+#include <array>
 
 /**
  * @brief Singleton for the PlayerIns structure
@@ -38,11 +39,11 @@ public:
 	void* getPointer(uint8_t index);
 	
 	/**
-	 * @brief Get the ID of the character's current animation
+	 * @brief Get the IDs of the character's current animation list
 	 * @param index Index of the character
-	 * @return The animation ID
+	 * @return The animation IDs
 	 */
-	int32_t getAnimationId(uint8_t index);
+	std::array<int32_t, 10> getAnimationsId(uint8_t index);
 
 	/**
 	 * @brief Get the character's remaining FP

@@ -34,11 +34,18 @@ void* PlayerIns::getPointer(uint8_t index)
 	return reinterpret_cast<void*>(base);
 }
 
-int32_t PlayerIns::getAnimationId(uint8_t index)
+std::array<int32_t, 10> PlayerIns::getAnimationsId(uint8_t index)
 {
 	void* playerIns = getPointer(index);
 	unsigned char* base = dereference_chain(playerIns, 0x190, 0x18);
-	return *reinterpret_cast<int32_t*>(base + 0x20);
+
+	std::array<int32_t, 10> animations;
+	for(std::size_t i = 0; i < 10; ++i)
+	{
+		animations[i] = *reinterpret_cast<int32_t*>(base + 0x20 + 0x10 * i);
+	}
+
+	return animations;
 }
 
 uint32_t PlayerIns::getFP(uint8_t index)
