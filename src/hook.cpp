@@ -77,6 +77,12 @@ void generateSpellList()
 		if(magic.id == 4640) continue; // Carian retaliation
 		if(magic.id == 4650) continue; // Eternal darkness
 
+		// Ignore support incantations not caught by the above checks
+		if(magic.id == 6520) continue; // Shadow bait
+		if(magic.id == 6530) continue; // Darkness
+		if(magic.id == 2006400) continue; // Heal from afar
+		if(magic.id == 2006670) continue; // Minor Erdtree
+
 		// Ignore spells not obtainable in vanilla not caught by the above checks
 		if(magic.id == 4641) continue; // Carian Retaliation (Unused 1)
 		if(magic.id == 4642) continue; // Carian Retaliation (Unused 2)
