@@ -131,8 +131,9 @@ void selectRandomSlot()
 	{
 		std::uniform_int_distribution<int> distribution(0, availableIndices.size() - 1);
 		g_selectedIndex = availableIndices.at(distribution(g_randomGenerator));
-		GameDataMan::getInstance().setSelectedSpellIndex(g_selectedIndex);
+
 		*g_logFile << "[SpellShuffler] New selected spell index: " << g_selectedIndex << std::endl;
+		GameDataMan::getInstance().setSelectedSpellIndex(g_selectedIndex);
 	}
 	else
 	{
@@ -178,8 +179,9 @@ void selectRandomSpell()
 		int32_t newSpellId = availableSpells.at(distribution(g_randomGenerator))->id;
 		int32_t selectedIndex = (g_allowSpellSwitching) ? GameDataMan::getInstance().getSelectedSpellIndex()
 		                                                : g_selectedIndex;
-		GameDataMan::getInstance().setEquippedSpell(selectedIndex, newSpellId);
+
 		*g_logFile << "[SpellShuffler] New spell: " << newSpellId << std::endl;
+		GameDataMan::getInstance().setEquippedSpell(selectedIndex, newSpellId);
 	}
 	else
 	{
