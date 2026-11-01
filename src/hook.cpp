@@ -22,7 +22,8 @@ bool g_sorceriesOnly = false; //< Only select sorceries
 bool g_incantsOnly = false; //< Only select incantations
 
 bool g_isCasting = false; //< Tracks if the player is currently casting
-int32_t g_selectedIndex = 0; //< Tracks the currently equipped spell index
+int32_t g_selectedSlotIndex = 0; //< Tracks the equipped spell index at the start of the cast
+int32_t g_spellSlotIndex = 0; //< Tracks the equipped spell index when selecting a random equipped spell
 std::ostream* g_logFile = nullptr; //< The output stream to use for logging
 std::vector<Magic> g_spells; //< The list of all spells
 
@@ -130,10 +131,10 @@ void selectRandomSlot()
 	if(availableIndices.size() != 0)
 	{
 		std::uniform_int_distribution<int> distribution(0, availableIndices.size() - 1);
-		g_selectedIndex = availableIndices.at(distribution(g_randomGenerator));
+		g_spellSlotIndex = availableIndices.at(distribution(g_randomGenerator));
 
-		*g_logFile << "[SpellShuffler] New selected spell index: " << g_selectedIndex << std::endl;
-		GameDataMan::getInstance().setSelectedSpellIndex(g_selectedIndex);
+		*g_logFile << "[SpellShuffler] New selected spell index: " << g_spellSlotIndex << std::endl;
+		GameDataMan::getInstance().setSelectedSpellIndex(g_spellSlotIndex);
 	}
 	else
 	{
@@ -158,7 +159,7 @@ void selectRandomSpell()
 	int32_t faith = GameDataMan::getInstance().getFaith();
 	int32_t arcane = GameDataMan::getInstance().getArcane();
 	int32_t selectedIndex = GameDataMan::getInstance().getSelectedSpellIndex();
-	int32_t currentSpellID = GameDataMan::getInstance().getEquippedSpellId(g_selectedIndex);
+	int32_t currentSpellID = GameDataMan::getInstance().getEquippedSpellId(g_selectedSlotIndex);
 	
 	std::vector<const Magic*> availableSpells;
 	for(Magic& spell : g_spells)
@@ -177,11 +178,9 @@ void selectRandomSpell()
 	{
 		std::uniform_int_distribution<int> distribution(0, availableSpells.size() - 1);
 		int32_t newSpellId = availableSpells.at(distribution(g_randomGenerator))->id;
-		int32_t selectedIndex = (g_allowSpellSwitching) ? GameDataMan::getInstance().getSelectedSpellIndex()
-		                                                : g_selectedIndex;
 
 		*g_logFile << "[SpellShuffler] New spell: " << newSpellId << std::endl;
-		GameDataMan::getInstance().setEquippedSpell(selectedIndex, newSpellId);
+		GameDataMan::getInstance().setEquippedSpell(g_selectedSlotIndex, newSpellId);
 	}
 	else
 	{
@@ -199,13 +198,14 @@ void spellShufflerMain(void* playerIns)
 	
 	if(!g_allowSpellSwitching)
 	{
-		GameDataMan::getInstance().setSelectedSpellIndex(g_selectedIndex);
+		GameDataMan::getInstance().setSelectedSpellIndex(g_spellSlotIndex);
 	}
 	
 	std::array<int32_t, 10> animationsId = PlayerIns::getInstance().getAnimationsId(0);
 	if(!g_isCasting && isMagicAnimation(animationsId))
 	{
 		g_isCasting = true;
+		g_selectedSlotIndex = (g_allowSpellSwitching) ? GameDataMan::getInstance().getSelectedSpellIndex() : g_spellSlotIndex;
 	}
 	else if(g_isCasting && !isMagicAnimation(animationsId))
 	{
